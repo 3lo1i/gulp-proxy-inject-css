@@ -29,11 +29,12 @@ const replaceAbsoluteUrls = (host) => {
 
 const proxyMutator = (mutatorsList) => {
   return (proxyRes, req, res) => {
-  let body = Buffer.alloc(0);
+    let body = Buffer.alloc(0);
     proxyRes.on('data', function (data) {
       body = Buffer.concat([body, data]);
     });
     proxyRes.on('end', function () {
+      delete proxyRes.headers['content-security-policy'];
       res.writeHead(proxyRes.statusCode, proxyRes.headers);
       const isGizp = proxyRes.headers['content-encoding'] === 'gzip';
       const isHTML = proxyRes.headers['content-type'] &&

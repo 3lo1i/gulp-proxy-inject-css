@@ -5,6 +5,7 @@ const express = require('express');
 const proxy = require('http-proxy-middleware');
 const spy = require('through2-spy');
 const opn = require('opn');
+const path = require('path');
 
 
 const escapeRegex = (str) => {
@@ -68,7 +69,7 @@ module.exports = (target,
     }) => {
   const url = `http://${host}:${port}`;
   const wsUrl = `ws://${wsHost}:${wsPort}${wsPath}`;
-  const templatePath = './frontend/reloadCSS.js';
+  const templatePath = path.join(__dirname, 'frontend', 'reloadCSS.js');
   const template = fs.readFileSync(templatePath, 'utf8');
   const injectScript = template.replace('$WS_URL', wsUrl);
   const injectString = `<script type="text/javascript">${injectScript}</script>`;
@@ -92,7 +93,7 @@ module.exports = (target,
 
   const app = express();
   app.use('/', proxy(proxyOptions));
-  app.listen(port, host, () => console.log(`Example app listening on port ${port}`));
+  app.listen(port, host, () => console.log(`Proxy for ${target} listening on port ${port}`));
   
   console.log(wsUrl);
   const wss = new WebSocket.Server({
@@ -104,7 +105,7 @@ module.exports = (target,
   const styles = {};
 
   wss.on('connection', ws => {
-    console.log('starting connection');
+    console.log(`WS: new client connected, sending current CSS files`);
     const data = Object.entries(styles)
       .map(([file, contents]) => ({ file, contents }));
     wss.clients.forEach((client) => {
@@ -119,7 +120,7 @@ module.exports = (target,
   });
 
   const broadcast = (data) => {
-    console.log('sending data');
+    console.log(`WS: ${data.file} updated, sending to ${wss.clients.length} client(s)`);
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify(data));

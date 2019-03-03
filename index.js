@@ -93,14 +93,13 @@ module.exports = (target,
 
   const app = express();
   app.use('/', proxy(proxyOptions));
-  app.listen(port, host, () => console.log(`Proxy for ${target} listening on port ${port}`));
+  app.listen(port, host, () => console.log(`Proxy for ${target} listening at ${url}`));
   
-  console.log(wsUrl);
   const wss = new WebSocket.Server({
     host: wsHost,
     port: wsPort,
     path: wsPath,
-  }, _ => {});
+  }, () => console.log(`WebSocket server listening at ${wsUrl}`));
 
   const styles = {};
 
@@ -120,7 +119,6 @@ module.exports = (target,
   });
 
   const broadcast = (data) => {
-    console.log(`WS: ${data.file} updated, sending to ${wss.clients.length} client(s)`);
     wss.clients.forEach((client) => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(JSON.stringify(data));
@@ -130,6 +128,7 @@ module.exports = (target,
 
   const spyCallback = (file) => {
     if (file.extname === '.css') {
+      console.log(`WS: ${file.relative} updated, sending to ${wss.clients.size} client(s)`);
       styles[file.relative] = file.contents.toString()
       broadcast([
         {

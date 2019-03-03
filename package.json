@@ -1,6 +1,6 @@
 {
   "name": "gulp-proxy-inject-css",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "gulp plugin for UserCSS live reload",
   "main": "index.js",
   "scripts": {

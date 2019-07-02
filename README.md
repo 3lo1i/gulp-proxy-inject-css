@@ -46,12 +46,12 @@ Key | Type | Default | Description
 `options` | Object | | Plugin options
 `options.port` | Number | `8080` | Proxy server port
 `options.host` | String | `localhost` | Proxy server host
-`https` | Boolean | `true` | Whether or not target site uses HTTPS
-`wsPort` | String | `8081` | Websocket server port
-`wsHost` | String | `localhost` | Websocket server host
-`wsPath` | String | `/reload` | Websocket server path
-`open` | Boolean | `true` | Whether or not to open proxy in browser automatically
-`proxyOpts` | Object | `{}` | Additional options to pass to [http-proxy-middleware](https://www.npmjs.com/package/http-proxy-middleware), if needed
+`options.https` | Boolean | `true` | Whether or not target site uses HTTPS
+`options.wsPort` | String | `8081` | Websocket server port
+`options.wsHost` | String | `localhost` | Websocket server host
+`options.wsPath` | String | `/reload` | Websocket server path
+`options.open` | Boolean | `true` | Whether or not to open proxy in browser automatically
+`options.proxyOpts` | Object | `{}` | Additional options to pass to [http-proxy-middleware](https://www.npmjs.com/package/http-proxy-middleware), if needed
 
 ## License
 
